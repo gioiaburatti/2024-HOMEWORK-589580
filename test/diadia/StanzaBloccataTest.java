@@ -1,53 +1,46 @@
 package diadia;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import it.uniroma3.diadia.ambienti.Stanza;
-import it.uniroma3.diadia.ambienti.StanzaBloccata;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
+import it.uniroma3.diadia.ambienti.StanzaBloccata;
+import it.uniroma3.diadia.ambienti.Stanza;
 
 public class StanzaBloccataTest {
-
     private StanzaBloccata stanzaBloccata;
-    private Stanza stanzaAdiacente;
-    private Attrezzo attrezzoSblocco;
+    private Stanza stanzaLibera;
+    private Attrezzo piedeDiPorco;
 
     @Before
     public void setUp() {
-        stanzaAdiacente = new Stanza("Stanza Adiacente");
-        stanzaBloccata = new StanzaBloccata("Stanza Bloccata", "chiave", "nord");
-        stanzaBloccata.impostaStanzaAdiacente("nord", stanzaAdiacente);
-        
-        attrezzoSblocco = new Attrezzo("chiave", 1); // attrezzo che sblocca la stanza
-        stanzaBloccata.addAttrezzo(attrezzoSblocco);
-    }
-
-    @Test
-    public void testGetStanzaAdiacenteSbloccata() {
-        Stanza result = stanzaBloccata.getStanzaAdiacente("nord");
-        assertEquals(stanzaAdiacente, result);
+        stanzaBloccata = new StanzaBloccata("Stanza Bloccata", "nord", "piedediporco");
+        stanzaLibera = new Stanza("Stanza Libera");
+        piedeDiPorco = new Attrezzo("piedediporco", 2);
+        stanzaBloccata.impostaStanzaAdiacente("nord", stanzaLibera);
     }
 
     @Test
     public void testGetStanzaAdiacenteBloccata() {
-        Stanza result = stanzaBloccata.getStanzaAdiacente("sud");
-        assertEquals(stanzaBloccata, result);
+        assertEquals(stanzaBloccata, stanzaBloccata.getStanzaAdiacente("nord"));
     }
 
     @Test
-    public void testGetDescrizioneSbloccata() {
-        String result = stanzaBloccata.getDescrizione();
-        assertEquals("Stanza Bloccata", result);
+    public void testGetStanzaAdiacenteSbloccata() {
+        stanzaBloccata.addAttrezzo(piedeDiPorco);
+        assertEquals(stanzaLibera, stanzaBloccata.getStanzaAdiacente("nord"));
     }
 
     @Test
     public void testGetDescrizioneBloccata() {
-        stanzaBloccata.removeAttrezzo(attrezzoSblocco);
-        String result = stanzaBloccata.getDescrizione();
-        assertEquals("stanza bloccata", result);
+        assertEquals("La direzione nord è bloccata, ti serve piedediporco per aprirla.", stanzaBloccata.getDescrizione());
+    }
+
+    @Test
+    public void testGetDescrizioneSbloccata() {
+        stanzaBloccata.addAttrezzo(piedeDiPorco);
+        assertEquals("Stanza Bloccata\nAttrezzi nella stanza: piedediporco (2kg) \nStanze adiacenti: nord ", stanzaBloccata.getDescrizione());
     }
 }

@@ -50,4 +50,5 @@ public class Attrezzo{
 		return this.getNome()+" ("+this.getPeso()+"kg)";
 	}
 
+
 }

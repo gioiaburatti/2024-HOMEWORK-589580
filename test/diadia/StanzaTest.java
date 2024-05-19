@@ -26,10 +26,8 @@ public class StanzaTest {
 	}
 	
 	@Test
-	public void testAddAttrezzo() {
-		
-		assertTrue(s1.addAttrezzo(m));
-	}
-	
-
+		public void testAddAttrezzo() {
+		    s1.addAttrezzo("martello");
+		    assertTrue(s1.hasAttrezzo("martello"));
+		}
 }

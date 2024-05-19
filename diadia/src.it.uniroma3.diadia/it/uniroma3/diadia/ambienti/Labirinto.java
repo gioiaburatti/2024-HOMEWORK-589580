@@ -9,19 +9,13 @@ public class Labirinto {
 
 	
 	private Stanza stanzaCorrente;
-	private Labirinto labirinto;
 	private Giocatore giocatore;
+	private Stanza stanzaIniziale;
 	
 	public Labirinto() {
 		creaStanze();
-		this.stanzaCorrente = entrata;
-		this.entrata = entrata;
-		this.uscita = uscita;
 	}
 	
-	/**
-     * Crea tutte le stanze e le porte di collegamento
-     */
     private void creaStanze() {
 
 		/* crea gli attrezzi */
@@ -55,6 +49,7 @@ public class Labirinto {
 
 		// il gioco comincia nell'atrio
         this.entrata = atrio;  
+        this.stanzaCorrente = atrio;
 		this.uscita = biblioteca;
     }
 
@@ -82,5 +77,14 @@ public class Labirinto {
 	public void setUscita(Stanza uscita) {
 		this.uscita = uscita;
 	}
+
+	public void setStanzaIniziale(Stanza stanzaIniziale) {
+		this.stanzaIniziale=stanzaIniziale;
+	}
+	
+	public Stanza getStanzaIniziale() {
+		return this.stanzaIniziale;
+	}
+	
 	
 }

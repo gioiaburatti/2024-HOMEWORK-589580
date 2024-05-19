@@ -2,8 +2,6 @@ package it.uniroma3.diadia;
 
 import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.Stanza;
-import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.giocatore.Borsa;
 import it.uniroma3.diadia.giocatore.Giocatore;
 
 /**
@@ -13,7 +11,6 @@ import it.uniroma3.diadia.giocatore.Giocatore;
  * @see Stanza
  * @version base
  */
-
 public class Partita {
 
 	static final private int CFU_INIZIALI = 20;
@@ -26,8 +23,10 @@ public class Partita {
 	private Giocatore giocatore;
 	
 	public Partita(){
-		this.giocatore = new Giocatore(CFU_INIZIALI, new Borsa());
-		this.labirinto = new Labirinto();
+		this.giocatore = new Giocatore(null, CFU_INIZIALI);
+		this.labirinto = new Labirinto(stanzaCorrente, stanzaCorrente);
+		this.stanzaCorrente = labirinto.getStanzaIniziale();
+		this.stanzaVincente = labirinto.getStanzaCorrente();
 		this.finita = false;
 		this.cfu = CFU_INIZIALI;
 	}
@@ -37,7 +36,7 @@ public class Partita {
 	 * @return vero se partita vinta
 	 */
 	public boolean vinta() {
-		return this.labirinto.getStanzaCorrente() == this.labirinto.getUscita();
+		return this.stanzaCorrente.equals(this.stanzaVincente);
 	}
 
 	/**
@@ -74,5 +73,9 @@ public class Partita {
 	
 	public Labirinto getLabirinto() {
 		return labirinto;
+	}
+
+	public Stanza getStanzaCorrente() {
+		return this.stanzaCorrente;
 	}
 }
