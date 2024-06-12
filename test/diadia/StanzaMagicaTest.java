@@ -1,33 +1,45 @@
 package diadia;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.ambienti.StanzaMagica;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class StanzaMagicaTest {
-    private StanzaMagica stanzaMagica;
+	
+	private static final String ATTREZZO_DA_MODIFICARE = "AttrezzoTest2";
+	private static final String ATTREZZO_TEST = "AttrezzoTest";
+	private static final int SOGLIA_MAGICA = 3;
+	private static final String STANZA_MAGICA_TEST = "StanzaMagicaTest";
+	
+	private StanzaMagica stanzaMagicaTest;
 
-    @Before
-    public void setUp() {
-        stanzaMagica = new StanzaMagica("Stanza Magica", 2);
-    }
+	@Before
+	public void setUp() {
+		 this.stanzaMagicaTest = new StanzaMagica(STANZA_MAGICA_TEST, SOGLIA_MAGICA);
+	}
 
-    @Test
-    public void testAddAttrezzo() {
-        Attrezzo attrezzo1 = new Attrezzo("chiave", 2);
-        Attrezzo attrezzo2 = new Attrezzo("libro", 3);
-        Attrezzo attrezzo3 = new Attrezzo("penna", 1);
-
-        assertTrue(stanzaMagica.addAttrezzo(attrezzo1));
-        assertTrue(stanzaMagica.addAttrezzo(attrezzo2));
-        assertTrue(stanzaMagica.addAttrezzo(attrezzo3));
-
-        Attrezzo attrezzoModificato = stanzaMagica.getAttrezzo("annep");
-        assertEquals("annep", attrezzoModificato.getNome());
-        assertEquals(2, attrezzoModificato.getPeso());
-    }
+	@Test
+	public void testAddAttrezzoOltreSogliaMagica() {
+		for (int i = 0; i < SOGLIA_MAGICA; i++) 
+			Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaMagicaTest, ATTREZZO_TEST, 1);
+		Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaMagicaTest, ATTREZZO_DA_MODIFICARE, 1);
+		String nomeAttrezzoModificato = new StringBuilder(ATTREZZO_DA_MODIFICARE).reverse().toString();
+		Attrezzo attrezzoModificato = this.stanzaMagicaTest.getAttrezzo(nomeAttrezzoModificato);
+		assertNotNull(attrezzoModificato);
+		assertEquals(2, attrezzoModificato.getPeso());
+		assertFalse(this.stanzaMagicaTest.hasAttrezzo(ATTREZZO_DA_MODIFICARE));
+	}
+	
+	@Test
+	public void testAddAttrezzoSingolo() {
+		Attrezzo attrezzoSemplice = Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaMagicaTest, ATTREZZO_TEST, 1);
+		assertEquals(attrezzoSemplice, this.stanzaMagicaTest.getAttrezzo(ATTREZZO_TEST));
+	}
 }

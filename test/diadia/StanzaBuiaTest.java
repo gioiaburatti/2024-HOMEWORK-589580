@@ -1,31 +1,41 @@
 package diadia;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.ambienti.StanzaBuia;
 
 public class StanzaBuiaTest {
-    private StanzaBuia stanzaBuia;
-    private Attrezzo lanterna;
 
-    @Before
-    public void setUp() {
-        stanzaBuia = new StanzaBuia("Stanza Buia", "lanterna");
-        lanterna = new Attrezzo("lanterna", 1);
-    }
+	private static final String ATTREZZO_LUCE_TEST = "attrezzoLuceTest";
+	private StanzaBuia stanzaBuia;
+	
+	@Before
+	public void setUp() {
+		this.stanzaBuia = new StanzaBuia("StanzaBuia", ATTREZZO_LUCE_TEST);
+	}
 
-    @Test
-    public void testGetDescrizioneConLanterna() {
-        stanzaBuia.addAttrezzo(lanterna);
-        assertEquals("Stanza Buia\nAttrezzi nella stanza: lanterna (1kg) \nStanze adiacenti: ", stanzaBuia.getDescrizione());
-    }
+	@Test
+	public void testGetDescrizioneLuceNonPresente() {
+		assertEquals(StanzaBuia.DESCRIZIONE_STANZA_BUIA, this.stanzaBuia.getDescrizione());
+	}
+	
+	@Test
+	public void testGetDescrizioneConLuce() {
+		Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaBuia, ATTREZZO_LUCE_TEST, 1);
+		assertNotEquals(StanzaBuia.DESCRIZIONE_STANZA_BUIA, this.stanzaBuia.getDescrizione());
+	}
+	
+	@Test
+	public void testGetAttrezzoInesistente() {
+		Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaBuia, "attrezzoDiTest", 1);
+		assertNull(this.stanzaBuia.getAttrezzo("inesistente"));		
+	}
+	
 
-    @Test
-    public void testGetDescrizioneSenzaLanterna() {
-        assertEquals("qui c'è un buio pesto", stanzaBuia.getDescrizione());
-    }
 }

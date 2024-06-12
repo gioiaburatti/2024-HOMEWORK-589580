@@ -1,46 +1,62 @@
 package diadia;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.ambienti.StanzaBloccata;
+import it.uniroma3.diadia.ambienti.Direzione;
 import it.uniroma3.diadia.ambienti.Stanza;
+import it.uniroma3.diadia.ambienti.StanzaBloccata;
 
 public class StanzaBloccataTest {
-    private StanzaBloccata stanzaBloccata;
-    private Stanza stanzaLibera;
-    private Attrezzo piedeDiPorco;
 
-    @Before
-    public void setUp() {
-        stanzaBloccata = new StanzaBloccata("Stanza Bloccata", "nord", "piedediporco");
-        stanzaLibera = new Stanza("Stanza Libera");
-        piedeDiPorco = new Attrezzo("piedediporco", 2);
-        stanzaBloccata.impostaStanzaAdiacente("nord", stanzaLibera);
-    }
+	private static final String STANZA_ADIACENTE_LIBERA = "stanzaAdiacenteLibera";
+	private static final String STANZA_ADIACENTE_BLOCCATA = "stanzaAdiacenteBloccata";
+	private static final Direzione DIREZIONE_BLOCCATA = Direzione.NORD;
+	private static final Direzione DIREZIONE_LIBERA = Direzione.SUD;
+	private static final String CHIAVE_TEST = "chiaveTest";
+	private static final String STANZA_BLOCCATA = "StanzaBloccata";
+	
+	private StanzaBloccata stanzaBloccata;
 
-    @Test
-    public void testGetStanzaAdiacenteBloccata() {
-        assertEquals(stanzaBloccata, stanzaBloccata.getStanzaAdiacente("nord"));
-    }
+	@Before
+	public void setUp() {
+		StanzaBloccata stanzaBloccata = new StanzaBloccata(STANZA_BLOCCATA, CHIAVE_TEST, DIREZIONE_BLOCCATA);
+		this.stanzaBloccata = stanzaBloccata;
+	}
 
-    @Test
-    public void testGetStanzaAdiacenteSbloccata() {
-        stanzaBloccata.addAttrezzo(piedeDiPorco);
-        assertEquals(stanzaLibera, stanzaBloccata.getStanzaAdiacente("nord"));
-    }
-
-    @Test
-    public void testGetDescrizioneBloccata() {
-        assertEquals("La direzione nord è bloccata, ti serve piedediporco per aprirla.", stanzaBloccata.getDescrizione());
-    }
-
-    @Test
-    public void testGetDescrizioneSbloccata() {
-        stanzaBloccata.addAttrezzo(piedeDiPorco);
-        assertEquals("Stanza Bloccata\nAttrezzi nella stanza: piedediporco (2kg) \nStanze adiacenti: nord ", stanzaBloccata.getDescrizione());
-    }
+	private void setStanzeAdiacenti(Stanza stanzaBloccata) {
+		Stanza stanzaAdiacenteLibera = new Stanza(STANZA_ADIACENTE_LIBERA);
+		Stanza stanzaAdiacenteBloccata = new Stanza(STANZA_ADIACENTE_BLOCCATA);
+		stanzaBloccata.impostaStanzaAdiacente(DIREZIONE_BLOCCATA, stanzaAdiacenteBloccata);
+		stanzaBloccata.impostaStanzaAdiacente(DIREZIONE_LIBERA, stanzaAdiacenteLibera);
+	}
+	
+	@Test
+	public void testGetStanzaAdiacenteBloccata() {
+		setStanzeAdiacenti(this.stanzaBloccata);
+		assertEquals(this.stanzaBloccata, this.stanzaBloccata.getStanzaAdiacente(DIREZIONE_BLOCCATA));
+	}
+	
+	@Test
+	public void testGetStanzaAdiacenteSbloccata() {
+		setStanzeAdiacenti(this.stanzaBloccata);
+		Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaBloccata, CHIAVE_TEST, 1);
+		assertEquals(STANZA_ADIACENTE_BLOCCATA, this.stanzaBloccata.getStanzaAdiacente(DIREZIONE_BLOCCATA).getNome());
+	}
+	
+	@Test
+	public void testGetStanzaAdiacenteLibera() {
+		setStanzeAdiacenti(this.stanzaBloccata);
+		assertEquals(STANZA_ADIACENTE_LIBERA, this.stanzaBloccata.getStanzaAdiacente(DIREZIONE_LIBERA).getNome());
+	}
+	
+	@Test
+	public void testGetAttrezzoInesistente() {
+		Fixture.creaAttrezzoEAggiungiAStanza(this.stanzaBloccata, "attrezzoDiTest", 1);
+		assertNull(this.stanzaBloccata.getAttrezzo("inesistente"));		
+	}
+	
 }
